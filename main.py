@@ -49,3 +49,11 @@ def search_leads(city, industry, min_size, max_size):
             new_leads.append(i) 
     return (new_leads)
             
+def get_lead(company):
+    for i in leads:
+        if i['company'] == company.lower():
+            return i
+    return 'Lead not found'
+        
+
+print(get_lead('TeSco'))
