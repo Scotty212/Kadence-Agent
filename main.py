@@ -54,6 +54,7 @@ def get_lead(company):
         if i['company'] == company.lower():
             return i
     return 'Lead not found'
-        
+
+
 
 print(get_lead('TeSco'))
