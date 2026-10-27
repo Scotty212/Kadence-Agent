@@ -55,6 +55,3 @@ def get_lead(company):
             return i
     return 'Lead not found'
 
-
-
-print(get_lead('TeSco'))
