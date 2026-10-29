@@ -30,12 +30,11 @@ search_leads_tool = {
             'industry': {'type': "string", "description": 'the industry the user searching for'},
             'min_size':{'type': 'integer', 'description': 'the minimum number of staff in the company the user is searching for, default is 1'},
             'max_size':{'type': 'integer', 'description': 'the maximum number of staff in the company the user is searching for, default is 20,000 '}
-        },
-        'required': ['city', 'industry', 'min_size', 'max_size']
+         }
         }
 }
 
-messages = [{'role': 'user', 'content': 'fast food in birmingham'}]
+messages = [{'role': 'user', 'content': 'companies in brum'}]
 
 response = client.messages.create(
     model='claude-haiku-5-5',
@@ -54,7 +53,7 @@ for block in response.content:
             result = (get_lead(block.input['company']))  
             result = str(result)      
         elif block.name == 'search_leads':
-            result = (search_leads(block.input['city'], block.input['industry'], block.input['min_size'], block.input['max_size']))
+            result = (search_leads(block.input.get('city'), block.input.get('industry'), block.input.get('min_size', 1), block.input.get('max_size',20000)))
             result = str(result)
             print(block.input)
         messages.append({'role': 'user', 'content':[{'type': 'tool_result', 'tool_use_id': block.id, 'content': result}]})
