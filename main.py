@@ -45,7 +45,7 @@ leads = [
 def search_leads(city, industry, min_size, max_size):
     new_leads = []
     for i in leads:
-        if i['city'] == city and i['company_size'] >= min_size and i['industry'] == industry and i['company_size'] <= max_size:
+        if i['city'] == city.lower() and i['company_size'] >= min_size and i['industry'] == industry.lower() and i['company_size'] <= max_size:
             new_leads.append(i) 
     return (new_leads)
             

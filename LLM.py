@@ -35,7 +35,7 @@ search_leads_tool = {
         }
 }
 
-messages = [{'role': 'user', 'content': 'companies in leeds'}]
+messages = [{'role': 'user', 'content': 'fast food in birmingham'}]
 
 response = client.messages.create(
     model='claude-haiku-5-5',
