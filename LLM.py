@@ -34,7 +34,7 @@ search_leads_tool = {
         }
 }
 
-messages = [{'role': 'user', 'content': 'hi'}]
+messages = [{'role': 'user', 'content': 'find fast food leads in birmingham, then give me full details on the first onee '}]
 
 response = client.messages.create(
     model='claude-haiku-5-5',
@@ -43,11 +43,8 @@ response = client.messages.create(
     messages=messages
 )
 
-messages.append({'role': 'assistant', 'content': response.content})
-
-print(messages)
-
-if response.stop_reason == 'tool_use':
+while response.stop_reason == 'tool_use':
+    messages.append({'role': 'assistant', 'content': response.content})
     for block in response.content:
         if block.type == 'tool_use':
             if block.name == 'get_lead':
@@ -56,20 +53,15 @@ if response.stop_reason == 'tool_use':
             elif block.name == 'search_leads':
                 result = (search_leads(block.input.get('city'), block.input.get('industry'), block.input.get('min_size', 1), block.input.get('max_size',20000)))
                 result = str(result)
-                print(block.input)
             messages.append({'role': 'user', 'content':[{'type': 'tool_result', 'tool_use_id': block.id, 'content': result}]})
 
-    final_response = client.messages.create(
+    response = client.messages.create(
         model='claude-haiku-5-5',
         max_tokens=1000,
         tools=[get_lead_tool, search_leads_tool],
         messages=messages
     )
-    for block in final_response.content:
-        if block.type == 'text':
-            print(block.text)
+for block in response.content:
+    if block.type == 'text':
+        print(block.text)
 
-else:
-    for block in response.content:
-        if block.type == 'text':
-            print(block.text)
