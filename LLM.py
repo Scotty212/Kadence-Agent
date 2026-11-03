@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import anthropic
 from main import get_lead
 from main import search_leads
+from main import score_lead
 
 load_dotenv()                  
 client = anthropic.Anthropic() 
@@ -30,45 +31,55 @@ search_leads_tool = {
             'industry': {'type': "string", "description": 'the industry the user searching for'},
             'min_size':{'type': 'integer', 'description': 'the minimum number of staff in the company the user is searching for, default is 1'},
             'max_size':{'type': 'integer', 'description': 'the maximum number of staff in the company the user is searching for, default is 20,000 '}
-        },
-        'required': ['city', 'industry', 'min_size', 'max_size']
+         }
         }
 }
 
-messages = [{'role': 'user', 'content': 'companies in leeds'}]
+score_lead_tool = {
+    'name': 'score_lead',
+    'description': 'use this when user asks for the score of a specific company',
+    'input_schema': {
+        'type': 'object',
+        'properties':{
+            'company': {
+                'type': 'string', 'description': 'the company the user is searching for'
+            }
+            },
+            'required': ['company']
+        }
+    }
+
+messages = [{'role': 'user', 'content': 'find me companies in manchester and rank them by score'}]
 
 response = client.messages.create(
     model='claude-haiku-5-5',
     max_tokens=1000,
-    tools=[get_lead_tool, search_leads_tool],
+    tools=[get_lead_tool, search_leads_tool, score_lead_tool],
     messages=messages
 )
 
-messages.append({'role': 'assistant', 'content': response.content})
+while response.stop_reason == 'tool_use':
+    messages.append({'role': 'assistant', 'content': response.content})
+    for block in response.content:
+        if block.type == 'tool_use':
+            if block.name == 'get_lead':
+                result = (get_lead(block.input['company']))  
+                result = str(result)      
+            if block.name == 'search_leads':
+                result = (search_leads(block.input.get('city'), block.input.get('industry'), block.input.get('min_size', 1), block.input.get('max_size',20000)))
+                result = str(result)
+            if block.name == 'score_lead':
+                result = (score_lead(block.input.get('company')))
+                result = str(result)
+            messages.append({'role': 'user', 'content':[{'type': 'tool_result', 'tool_use_id': block.id, 'content': result}]})
 
-print(messages)
-
+    response = client.messages.create(
+        model='claude-haiku-5-5',
+        max_tokens=1000,
+        tools=[get_lead_tool, search_leads_tool, score_lead_tool],
+        messages=messages
+    )
 for block in response.content:
-    if block.type == 'tool_use':
-        if block.name == 'get_lead':
-            result = (get_lead(block.input['company']))  
-            result = str(result)      
-        elif block.name == 'search_leads':
-            result = (search_leads(block.input['city'], block.input['industry'], block.input['min_size'], block.input['max_size']))
-            result = str(result)
-            print(block.input)
-        messages.append({'role': 'user', 'content':[{'type': 'tool_result', 'tool_use_id': block.id, 'content': result}]})
-
-
-final_response = client.messages.create(
-    model='claude-haiku-5-5',
-    max_tokens=1000,
-    tools=[get_lead_tool, search_leads_tool],
-    messages=messages
-)
-
-for block in final_response.content:
     if block.type == 'text':
         print(block.text)
-
 
