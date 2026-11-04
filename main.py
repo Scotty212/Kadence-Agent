@@ -70,22 +70,52 @@ def get_lead(company):
 
 
 def score_lead(company):
-    company_score = []
-    
     for lead in leads:
         if lead['company'] == company.lower():
-            size_score = lead['company_size'] * 0.10
-            mrr_score = lead['mrr'] // 1000
-            marketcap_score = lead['market_cap'] // 100000
-            score = marketcap_score + mrr_score + size_score
+            reasons = []
 
-            company_score.append({
+            if lead['market_cap'] <= 10000:
+                marketcap_score = 10
+                reasons.append('market cap under 10k: small, ideal client')
+            elif lead['market_cap'] <= 100000:
+                marketcap_score = 8
+                reasons.append('market cap 10k-100k: good fit')
+            else:
+                marketcap_score = 4
+                reasons.append('market cap over 100k: may be too big')
+
+            if lead['mrr'] <= 10000:
+                mrr_score = 10
+                reasons.append('MRR under 10k: likely needs help scaling')
+            elif lead['mrr'] <= 100000:
+                mrr_score = 8
+                reasons.append('MRR 10k-100k: can afford us')
+            else:
+                mrr_score = 4
+                reasons.append('MRR over 100k: may have in-house tools')
+
+            if lead['company_size'] <= 50:
+                size_score = 10
+                reasons.append('under 50 staff: ideal size')
+            elif lead['company_size'] <= 100:
+                size_score = 8
+                reasons.append('51-100 staff: good size')
+            else:
+                size_score = 4
+                reasons.append('over 100 staff: probably too big')
+
+            total = round((marketcap_score + mrr_score + size_score) / 3, 1)
+
+            return {
                 'company': lead['company'],
-                'score': score
-            })
-            return company_score
+                'score': total,
+                'reasons': reasons
+            }
+
     return 'lead not found'
 
+    
+print(score_lead('jd'))
 
 
 
