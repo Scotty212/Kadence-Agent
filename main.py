@@ -67,8 +67,6 @@ def get_lead(company):
             return i
     return 'Lead not found'
 
-
-
 def score_lead(company):
     for lead in leads:
         if lead['company'] == company.lower():
@@ -114,8 +112,17 @@ def score_lead(company):
 
     return 'lead not found'
 
+
+def draft_email(company, subject, body):
+
+    f_name = (f'draft email/{company}.txt')
+    with open(f_name, 'w') as f:
+        f.write(f'Subject: {subject}\n\n{body}')
+    return 'Email has been drafted and saved in draft email folder'
+
     
-print(score_lead('jd'))
+
+
 
 
 
