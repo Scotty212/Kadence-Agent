@@ -69,7 +69,7 @@ draft_email_tool = {
     }
 }
 
-messages = [{'role': 'user', 'content': 'draft an email to tesco explaining what kadence does and how we can help'}]
+messages = [{'role': 'user', 'content': 'draft an email to Dominoes explaining what kadence does and how we can help. can you also tell me about Google'}]
 
 response = client.messages.create(
     model='claude-haiku-5-5',
@@ -86,13 +86,13 @@ while response.stop_reason == 'tool_use':
             if block.name == 'get_lead':
                 result = (get_lead(block.input['company']))  
                 result = str(result)      
-            if block.name == 'search_leads':
+            elif block.name == 'search_leads':
                 result = (search_leads(block.input.get('city'), block.input.get('industry'), block.input.get('min_size', 1), block.input.get('max_size',20000)))
                 result = str(result)
-            if block.name == 'score_lead':
+            elif block.name == 'score_lead':
                 result = (score_lead(block.input.get('company')))
                 result = str(result)
-            if block.name == ('draft_email'):
+            elif block.name == ('draft_email'):
                 result = (draft_email(block.input.get('company'), block.input.get('subject'), block.input.get('body')))
                 result = str(result)
             messages.append({'role': 'user', 'content':[{'type': 'tool_result', 'tool_use_id': block.id, 'content': result}]})
