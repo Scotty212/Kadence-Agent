@@ -1,14 +1,14 @@
-Subject: Manual admin at Dominoes Birmingham
+Subject: Taking admin off the Birmingham Dominoes team
 
 Hi Mo,
 
-Running a fast food business in Birmingham with around 200 staff means plenty of repetitive admin behind the counter, from order follow-ups to invoicing and supplier emails.
+Running a Dominoes in Birmingham means a lot of orders coming in through different channels, and a lot of admin sitting behind them.
 
-I'm Luke, founder of Kadence Lab. We build automations and AI systems that take manual admin off businesses like yours. For example, we built a WhatsApp menu system for restaurants, where customers scan a QR code and get the menu sent to them automatically.
+Kadence Lab is a UK AI and automation studio. We build systems that take repetitive admin off small and mid-sized businesses. For restaurants, we've built a WhatsApp menu system: customers scan a QR code and the menu is sent to them automatically on WhatsApp. We've also built an AI lead pipeline and a client onboarding system that sends invoices automatically.
 
-Everything is built in your own accounts, with a short walkthrough video. Before we build, I explain what it will save and what it will cost to run. If something isn't worth automating, I'll say so.
+Everything is built in your own accounts, with a short walkthrough video. Before we build anything, I'll explain what it will save and what it will cost to run. If something isn't worth automating, I'll say so.
 
-Would a free 20-minute call work to look at where time is going on manual work? You can book here: https://calendly.com/kad3nce-lab/30min
+Would you be open to a free 20-minute call to look at where your team is losing time to manual work? You can book a slot here: https://calendly.com/kad3nce-lab/30min
 
 Luke
 Kadence Lab

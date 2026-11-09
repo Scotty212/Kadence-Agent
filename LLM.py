@@ -81,6 +81,7 @@ response = client.messages.create(
 
 while response.stop_reason == 'tool_use':
     messages.append({'role': 'assistant', 'content': response.content})
+    tool_result = []
     for block in response.content:
         if block.type == 'tool_use':
             if block.name == 'get_lead':
@@ -95,8 +96,9 @@ while response.stop_reason == 'tool_use':
             elif block.name == ('draft_email'):
                 result = (draft_email(block.input.get('company'), block.input.get('subject'), block.input.get('body')))
                 result = str(result)
-            messages.append({'role': 'user', 'content':[{'type': 'tool_result', 'tool_use_id': block.id, 'content': result}]})
+            tool_result.append({'type': 'tool_result', 'tool_use_id': block.id, 'content': result})
 
+    messages.append({'role': 'user', 'content': tool_result})
     response = client.messages.create(
         model='claude-haiku-5-5',
         max_tokens=10000,
